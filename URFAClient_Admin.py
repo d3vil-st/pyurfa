@@ -40,3 +40,16 @@ class URFAClient_Admin(URFAClient_connection):
         data['core_build'] = tmp.DataGetString()
         self.urfa_get_data()
         return data
+    
+    def rpcf_change_intstat_for_user(self, account_id, status):
+        if not self.urfa_call(0x2003):
+            print "error calling function"
+            return False
+        
+        print account_id
+        packet = self.getPacket()
+        packet.DataSetInt(account_id)
+        packet.DataSetInt(status)
+        self.urfa_send_param(packet)
+        self.urfa_get_data()
+    
