@@ -53,3 +53,56 @@ class URFAClient_Admin(URFAClient_connection):
         self.urfa_send_param(packet)
         self.urfa_get_data()
     
+
+    def rpcf_get_userinfo(self, user_id):
+        data = {}
+        if not self.urfa_call(0x2006):
+            print "error calling function"
+            return False
+        packet = self.getPacket()
+        packet.DataSetInt(user_id)
+        self.urfa_send_param(packet)
+        tmp = self.urfa_get_data()
+        data['user'] = tmp.DataGetInt()
+        if data['user'] != 0:
+            data['accounts_count'] = tmp.DataGetInt()
+            data['accounts'] = []
+            for i in range(0, data['accounts_count']):
+                account = {'id': tmp.DataGetInt(), 'name': tmp.DataGetString()}
+                data['accounts'].append(account)
+        data['login'] = tmp.DataGetString()
+        data['password'] = tmp.DataGetString()
+        data['basic_account'] = tmp.DataGetInt()
+        data['full_name'] = tmp.DataGetString()
+        data['create_date'] = tmp.DataGetInt()
+        data['last_change_date'] = tmp.DataGetInt()
+        data['who_create'] = tmp.DataGetInt()
+        data['who_change'] = tmp.DataGetInt()
+        data['is_juridical'] = tmp.DataGetInt()
+        data['jur_address'] = tmp.DataGetString()
+        data['act_address'] = tmp.DataGetString()
+        data['work_tel'] = tmp.DataGetString()
+        data['home_tel'] = tmp.DataGetString()
+        data['mob_tel'] = tmp.DataGetString()
+        data['web_page'] = tmp.DataGetString()
+        data['icq_number'] = tmp.DataGetString()
+        data['tax_number'] = tmp.DataGetString()
+        data['kpp_number'] = tmp.DataGetString()
+        data['bank_id'] = tmp.DataGetInt()
+        data['bank_account'] = tmp.DataGetString()
+        data['comments'] = tmp.DataGetString()
+        data['personal_manager'] = tmp.DataGetString()
+        data['connect_date'] = tmp.DataGetInt()
+        data['email'] = tmp.DataGetString()
+        data['is_send_invoice'] = tmp.DataGetInt()
+        data['advance_payment'] = tmp.DataGetInt()
+        data['house_id'] = tmp.DataGetInt()
+        data['flat_number'] = tmp.DataGetString()
+        data['entrance'] = tmp.DataGetString()
+        data['floor'] = tmp.DataGetString()
+        data['district'] = tmp.DataGetString()
+        data['building'] = tmp.DataGetString()
+        data['passport'] = tmp.DataGetString()
+        data['parameters_count'] = tmp.DataGetInt()
+        self.urfa_get_data()
+        return data
