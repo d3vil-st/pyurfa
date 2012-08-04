@@ -106,3 +106,22 @@ class URFAClient_Admin(URFAClient_connection):
         data['parameters_count'] = tmp.DataGetInt()
         self.urfa_get_data()
         return data
+
+    def rpcf_get_user_tariffs(self, user_id, account_id):  #0x3017
+        data = {}
+        if not self.urfa_call(0x3017):
+            print "error calling function"
+            return False
+        packet = self.getPacket()
+        packet.DataSetInt(user_id)
+        packet.DataSetInt(account_id)
+        self.urfa_send_param(packet)
+        tmp = self.urfa_get_data()
+        data['count'] = tmp.DataGetInt()
+        data['tariffs'] = []
+        for i in range(0, data['count']):
+            tarif = {'current_tarif': tmp.DataGetInt(), 'next_tarif': tmp.DataGetInt(),
+                     'discount_period_id': tmp.DataGetInt(), 'tarif_link_id': tmp.DataGetInt()}
+            data['tariffs'].append(tarif)
+        self.urfa_get_data()
+        return data

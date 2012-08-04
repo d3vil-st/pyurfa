@@ -6,18 +6,25 @@ import socket, hashlib, ssl
 from URFAClient_Packet import URFAClient_Packet
 
 class URFAClient_connection():
-    
+    error = False
+    error_message = ""
     __socket = None
     
     def __init__(self, address, port, login, password, ssl = None):
         if address and port and login:
             self.open(address, port)
-            self.login(login, password)
+            if (not self.error):
+                self.login(login, password)
 
     def open(self, address, port):
         self.socket = socket.socket(
                           socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.connect((address,port))
+        try:
+            self.socket.connect((address,port))
+        except socket.error as message:
+            self.error = True
+            self.error_message = message
+        
         #print self.socket.recv(64)
 
 
