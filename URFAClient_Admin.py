@@ -125,3 +125,22 @@ class URFAClient_Admin(URFAClient_connection):
             data['tariffs'].append(tarif)
         self.urfa_get_data()
         return data
+    
+    def rpcf_link_user_tariff(self, user_id, tariff_current, tariff_next, discount_period_id, tariff_link_id=0, account_id=0): #0x3018
+        if not self.urfa_call(0x3018):
+            print "error calling function"
+            return False
+        packet = self.getPacket()
+        packet.DataSetInt(user_id)
+        packet.DataSetInt(account_id)
+        packet.DataSetInt(tariff_current)
+        packet.DataSetInt(tariff_next)
+        packet.DataSetInt(discount_period_id)
+        packet.DataSetInt(tariff_link_id)
+        self.urfa_send_param(packet)
+        tmp = self.urfa_get_data()
+        tariff_link_id = tmp.DataGetInt()
+        if tariff_link_id != 0:
+            self.urfa_get_data()
+            return tariff_link_id
+        self.urfa_get_data()
