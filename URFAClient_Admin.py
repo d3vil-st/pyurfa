@@ -140,7 +140,6 @@ class URFAClient_Admin(URFAClient_connection):
         self.urfa_send_param(packet)
         tmp = self.urfa_get_data()
         tariff_link_id = tmp.DataGetInt()
+		self.urfa_get_data()
         if tariff_link_id != 0:
-            self.urfa_get_data()
             return tariff_link_id
-        self.urfa_get_data()
